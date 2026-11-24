@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAHIL AI</title>
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 16px 18px 20px;
+  background: radial-gradient(circle at 50% 35%, #123663 0%, #091d3a 50%, #051324 100%);
+  color: #f0f9ff;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.header-area {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(125, 211, 252, 0.25);
+  padding-bottom: 12px;
+}
+.title-top {
+  font-size: 26px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: #7dd3fc;
+}
+.top-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#wakePill {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  background: rgba(16, 185, 129, 0.14);
+  color: #6ee7b7;
+  cursor: pointer;
+}
+#wakePill.active {
+  background: #10b981;
+  color: #03150e;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+}
+#menuBtn {
+  font-size: 24px;
+  padding: 6px 14px;
+  border-radius: 12px;
+  border: 1px solid #38bdf8;
+  background: #102a4c;
+  color: #ffffff;
+  cursor: pointer;
+}
+#drawer {
+  display: none;
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #091a33;
+  border: 1px solid #38bdf8;
+  text-align: left;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+}
+.center-area {
+  flex: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+}
+.hero-h1 {
+  font-size: 44px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin: 0 0 6px;
+  color: #e0f2fe;
+}
+.sub-p {
+  color: #9bc0dc;
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+#sCircle {
+  width: 172px;
+  height: 172px;
+  line-height: 172px;
+  border-radius: 50%;
+  margin: 0 auto 24px;
+  font-size: 68px;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0ea5e9, #10b981);
+  box-shadow: 0 0 38px rgba(56, 189, 248, 0.48), 0 0 70px rgba(16, 185, 129, 0.2);
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+#sCircle.listening {
+  box-shadow: 0 0 46px rgba(16, 185, 129, 0.8), 0 0 84px rgba(56, 189, 248, 0.45);
+}
+#sCircle:active {
+  transform: scale(0.95);
+}
+#talkBtn {
+  padding: 15px 32px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0284c7, #0ea5e9);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.4);
+  cursor: pointer;
+}
+#talkBtn:active {
+  transform: scale(0.96);
+}
+#statusText {
+  max-width: 650px;
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 22px auto 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 18px;
+  color: #bae6fd;
+  line-height: 1.55;
+}
+.bottom-bar {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(125, 211, 252, 0.16);
+  font-size: 12px;
+  color: #88b2d1;
+}
+.row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.sec-lbl {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #7dd3fc;
+  font-weight: bold;
+  margin-top: 12px;
+}
+#cmdBox, #gemKeyBox {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #38bdf8;
+  background: #061224;
+  color: #ffffff;
+  font-size: 14px;
+}
+#sendBtn, #clearBtn, #saveKeyBtn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #38bdf8;
+  color: #041322;
+  font-weight: bold;
+  cursor: pointer;
+}
+#histList {
+  margin-top: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.h-item {
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+</style>
+</head>
+<body>
+
+<div class="header-area">
+  <div class="top">
+    <span class="title-top">SAHIL AI</span>
+    <div class="top-right">
+      <button type="button" id="wakePill">Wake Word: OFF</button>
+      <button type="button" id="menuBtn">&#9776;</button>
+    </div>
+  </div>
+
+  <div id="drawer">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <strong>Question &amp; Answer History</strong>
+      <button type="button" id="clearBtn">Clear</button>
+    </div>
+    <div class="row">
+      <input type="text" id="cmdBox" placeholder="Hindi ya English mein sawal likhein...">
+      <button type="button" id="sendBtn">Send</button>
+    </div>
+    <div id="histList">No history yet.</div>
+
+    <div class="sec-lbl">Gemini API Key (For Detailed ChatGPT/Gemini Answers)</div>
+    <div class="row">
+      <input type="password" id="gemKeyBox" placeholder="Paste Gemini API key here">
+      <button type="button" id="saveKeyBtn">Save</button>
+    </div>
+    <div id="keyMsg" style="font-size:12px; color:#9bc0dc; margin-top:5px;">
+      Key save karne par har sawal ka lamba aur clear jawab yahin milega.
+    </div>
+  </div>
+</div>
+
+<div class="center-area">
+  <h1 class="hero-h1">SAHIL AI</h1>
+  <p class="sub-p">Hindi &amp; English Voice Assistant &bull; Say "Sahil" Hands-Free</p>
+
+  <div id="sCircle">S</div>
+  <button type="button" id="talkBtn">&#127908; Talk to SAHIL</button>
+
+  <div id="statusText">Welcome to Sahil personal assistant, how may I help you?</div>
+</div>
+
+<div class="bottom-bar">
+  Ek baar touch karein, phir bina touch kiye <strong>"Sahil ..."</strong> bol kar Hindi ya English mein puchhein
+</div>
+
+<script>
+var WELCOME = "Welcome to Sahil personal assistant, how may I help you?";
+var histData = [];
+var gemKey = "";
+var spokenWelcome = false;
+var wakeMode = false;
+var activeRec = null;
+var isSpeaking = false;
+
+try {
+  histData = JSON.parse(localStorage.getItem("sahil_simple_hist") || "[]");
+  gemKey = localStorage.getItem("sahil_gemini_key") || "";
+} catch (e) {}
+
+if (gemKey) {
+  document.getElementById("gemKeyBox").value = gemKey;
+  document.getElementById("keyMsg").innerText = "Gemini API key saved! Detailed answers active.";
+}
+
+function showHist() {
+  var box = document.getElementById("histList");
+  if (!histData.length) {
+    box.innerHTML = "<div class='h-item'>No history yet.</div>";
+    return;
+  }
+  var s = "";
+  for (var i = 0; i < histData.length; i++) {
+    s += "<div class='h-item'><b>" + histData[i].who + ":</b> " + histData[i].msg + "</div>";
+  }
+  box.innerHTML = s;
+  box.scrollTop = box.scrollHeight;
+}
+
+function saveHist(who, msg) {
+  histData.push({ who: who, msg: msg });
+  if (histData.length > 60) histData = histData.slice(-60);
+  try {
+    localStorage.setItem("sahil_simple_hist", JSON.stringify(histData));
+  } catch (e) {}
+  showHist();
+}
+
+function detectHindi(text) {
+  if (/[\u0900-\u097F]/.test(text)) return true;
+  var hindiWords = /\b(kya|kaise|kaisa|kaisi|kaun|kab|kahan|kyun|kyu|batao|bataiye|samjhao|samjha|hai|hain|ho|tha|thi|the|mera|meri|mere|tum|aap|namaste|shukriya|dhanyawad|aaj|kal|samay|waqt|tarikh|din|saal|mausam|kaam|madad|karo|kijiye|baare|mein|ke|ki|ka|ko|se|par|aur|ya|nahi|haan)\b/i;
+  return hindiWords.test(text);
+}
+
+function bolna(txt, logIt, forceHindi) {
+  document.getElementById("statusText").innerText = txt;
+  if (logIt) saveHist("Sahil", txt);
+  if ("speechSynthesis" in window) {
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(txt);
+      var useHi = (typeof forceHindi === "boolean") ? forceHindi : detectHindi(txt);
+      u.lang = useHi ? "hi-IN" : "en-US";
+      u.rate = 0.98;
+      isSpeaking = true;
+      u.onend = function() {
+        isSpeaking = false;
+        if (wakeMode) startWakeLoop();
+      };
+      u.onerror = function() {
+        isSpeaking = false;
+        if (wakeMode) startWakeLoop();
+      };
+      window.speechSynthesis.speak(u);
+      spokenWelcome = true;
+    } catch (e) {
+      isSpeaking = false;
+    }
+  }
+}
+
+function tryMath(text) {
+  var expr = text
+    .replace(/calculate|what is|what's|solve|kitna hota hai|kitna hai/gi, "")
+    .replace(/plus|jod/gi, "+")
+    .replace(/minus|ghata/gi, "-")
+    .replace(/times|multiplied by|guna/gi, "*")
+    .replace(/divided by|bhag/gi, "/")
+    .replace(/[^0-9+\-*/().\s]/g, "")
+    .trim();
+  if (!expr || !/\d/.test(expr)) return null;
+  try {
+    var val = Function('"use strict"; return (' + expr + ")")();
+    if (typeof val === "number" && isFinite(val)) {
+      return Number.isInteger(val) ? val : val.toFixed(2);
+    }
+  } catch (e) {}
+  return null;
+}
+
+function askGeminiDetailed(q, isHi) {
+  if (!gemKey) return Promise.resolve(null);
+  var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(gemKey);
+  var prompt = isHi
+    ? "User ne Hindi/Hinglish mein sawal pucha hai. Iska ekdam clear, aasan aur detailed (4 se 6 lines ka) jawab Hindi (Devanagari ya natural Hindi) mein do, bina markdown stars (*) ke: " + q
+    : "The user asked in English. Give a very clear, well-explained, and detailed answer (4 to 6 sentences) in English without markdown asterisks (*): " + q;
+  return fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(d) {
+      if (d && d.candidates && d.candidates[0] && d.candidates[0].content && d.candidates[0].content.parts && d.candidates[0].content.parts[0]) {
+        return d.candidates[0].content.parts[0].text.replace(/[*#]/g, "").trim();
+      }
+      return null;
+    })
+    .catch(function() { return null; });
+}
+
+function fetchWikiDetailed(q, isHi) {
+  var topic = q
+    .replace(/^(who is|who was|what is|what are|what was|where is|when was|why is|how does|how to|tell me about|explain|kya hai|kaun hai|ke baare mein batao|batao)\s+/i, "")
+    .replace(/[?.!]+$/g, "")
+    .trim() || q;
+  var langCode = isHi ? "hi" : "en";
+  var sUrl = "https://" + langCode + ".wikipedia.org/w/api.php?action=query&list=search&srsearch=" + encodeURIComponent(topic) + "&format=json&origin=*";
+  return fetch(sUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(sd) {
+      var title = sd && sd.query && sd.query.search && sd.query.search[0] ? sd.query.search[0].title : null;
+      if (!title && isHi) {
+        return fetchWikiDetailed(q, false);
+      }
+      if (!title) return null;
+      return fetch("https://" + langCode + ".wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(title)).then(function(res) { return res.json(); });
+    })
+    .then(function(sum) {
+      if (typeof sum === "string") return sum;
+      if (sum && sum.extract) {
+        return sum.extract.split(". ").slice(0, 4).join(". ");
+      }
+      return null;
+    })
+    .catch(function() { return null; });
+}
+
+function replyCmd(q) {
+  var clean = String(q || "").trim();
+  if (!clean) return;
+  saveHist("You", clean);
+  var isHi = detectHindi(clean);
+  var low = clean.toLowerCase();
+
+  var mathAns = tryMath(low);
+  if (mathAns !== null) {
+    bolna(isHi ? ("Iska jawab " + mathAns + " hai.") : ("The answer is " + mathAns + "."), true, isHi);
+    return;
+  }
+
+  if (low.indexOf("time") !== -1 || low.indexOf("samay") !== -1 || low.indexOf("waqt") !== -1 || low.indexOf("baje") !== -1) {
+    var tStr = new Date().toLocaleTimeString(isHi ? "hi-IN" : "en-US", { hour: "2-digit", minute: "2-digit" });
+    bolna(isHi ? ("Abhi samay " + tStr + " ho raha hai.") : ("The current time is " + tStr + "."), true, isHi);
+    return;
+  }
+
+  if (low.indexOf("year") !== -1 || low.indexOf("saal") !== -1) {
+    var yr = new Date().getFullYear();
+    bolna(isHi ? ("Abhi saal " + yr + " chal raha hai.") : ("The current year is " + yr + "."), true, isHi);
+    return;
+  }
+
+  if (low.indexOf("day") !== -1 || low.indexOf("din") !== -1) {
+    var dayStr = new Date().toLocaleDateString(isHi ? "hi-IN" : "en-US", { weekday: "long" });
+    bolna(isHi ? ("Aaj " + dayStr + " hai.") : ("Today is " + dayStr + "."), true, isHi);
+    return;
+  }
+
+  if (low.indexOf("date") !== -1 || low.indexOf("tarikh") !== -1 || low.indexOf("aaj kya") !== -1) {
+    var dStr = new Date().toLocaleDateString(isHi ? "hi-IN" : "en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+    bolna(isHi ? ("Aaj ki tarikh " + dStr + " hai.") : ("Today's date is " + dStr + "."), true, isHi);
+    return;
+  }
+
+  if (low.indexOf("how are you") !== -1 || low.indexOf("how you doing") !== -1 || low.indexOf("kaise ho") !== -1 || low.indexOf("kya haal") !== -1) {
+    bolna(isHi ? "Main bilkul theek hoon Sahil! Bataiye main aapki kya madad kar sakta hoon?" : "I am doing great, Sahil! How may I help you today?", true, isHi);
+    return;
+  }
+
+  if (low.indexOf("who are you") !== -1 || low.indexOf("kaun ho") !== -1) {
+    bolna(isHi ? "Main Sahil AI hoon, aapka personal voice assistant. Aap mujhse Hindi ya English mein kuch bhi puch sakte hain." : "I am Sahil AI, your personal assistant. You can ask me anything in English or Hindi.", true, isHi);
+    return;
+  }
+
+  document.getElementById("statusText").innerText = isHi ? "Jawab taiyar kar raha hoon..." : "Thinking in detail...";
+  askGeminiDetailed(clean, isHi).then(function(gAns) {
+    if (gAns) {
+      bolna(gAns, true, isHi);
+      return;
+    }
+    fetchWikiDetailed(clean, isHi).then(function(wAns) {
+      if (wAns) {
+        bolna(wAns, true, isHi);
+      } else {
+        bolna(
+          isHi
+            ? ("Maine aapka sawal suna: " + clean + ". Aur zyada detail ke liye menu mein Gemini API key save karein taaki main har sawal ka lamba jawab de sakoon.")
+            : ("I heard your question: " + clean + ". Save your Gemini API key in the menu for full detailed answers on any topic."),
+          true,
+          isHi
+        );
+      }
+    });
+  });
+}
+
+function updateWakeUI() {
+  var pill = document.getElementById("wakePill");
+  var circle = document.getElementById("sCircle");
+  if (wakeMode) {
+    pill.innerText = 'Wake Word "Sahil": ON';
+    pill.classList.add("active");
+    circle.classList.add("listening");
+  } else {
+    pill.innerText = "Wake Word: OFF";
+    pill.classList.remove("active");
+    circle.classList.remove("listening");
+  }
+}
+
+function startWakeLoop() {
+  if (!wakeMode || isSpeaking) return;
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  if (activeRec) {
+    try { activeRec.abort(); } catch (e) {}
+  }
+  var rec = new SR();
+  activeRec = rec;
+  rec.lang = "en-IN";
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  rec.onstart = function() {
+    if (!isSpeaking) {
+      document.getElementById("statusText").innerText = 'Hands-free ON: Say "Sahil" + your question...';
+    }
+  };
+
+  rec.onresult = function(e) {
+    var heard = String(e.results[0][0].transcript || "").trim();
+    if (!heard) return;
+    if (/sahil|साहिल/i.test(heard)) {
+      var cmd = heard.replace(/^.*?(sahil|साहिल)[,:\s-]*/i, "").trim();
+      if (!cmd) {
+        bolna("Yes Sahil, boliye kya puchna hai?", false, false);
+      } else {
+        replyCmd(cmd);
+      }
+    }
+  };
+
+  rec.onerror = function(e) {
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+      wakeMode = false;
+      updateWakeUI();
+      document.getElementById("statusText").innerText = "Mic permission blocked. Allow microphone in browser settings.";
+    }
+  };
+
+  rec.onend = function() {
+    if (wakeMode && !isSpeaking) {
+      setTimeout(startWakeLoop, 350);
+    }
+  };
+
+  try {
+    rec.start();
+  } catch (e) {}
+}
+
+function startSingleMic() {
+  spokenWelcome = true;
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    bolna("Mic not supported here. Use menu type box.", false, false);
+    return;
+  }
+  if (activeRec) {
+    try { activeRec.abort(); } catch (e) {}
+  }
+  var rec = new SR();
+  activeRec = rec;
+  rec.lang = "en-IN";
+  rec.interimResults = false;
+
+  rec.onstart = function() {
+    document.getElementById("sCircle").classList.add("listening");
+    document.getElementById("statusText").innerText = "Listening (Hindi / English)...";
+  };
+
+  rec.onresult = function(e) {
+    var txt = String(e.results[0][0].transcript || "").trim();
+    txt = txt.replace(/^(sahil|साहिल)[,:\s-]*/i, "").trim() || txt;
+    replyCmd(txt);
+  };
+
+  rec.onerror = function(e) {
+    document.getElementById("statusText").innerText = "Mic error: " + e.error;
+  };
+
+  rec.onend = function() {
+    if (!wakeMode) {
+      document.getElementById("sCircle").classList.remove("listening");
+    } else if (!isSpeaking) {
+      setTimeout(startWakeLoop, 350);
+    }
+  };
+
+  rec.start();
+}
+
+document.getElementById("wakePill").onclick = function() {
+  spokenWelcome = true;
+  wakeMode = !wakeMode;
+  updateWakeUI();
+  if (wakeMode) {
+    bolna('Hands-free mode on. Ab aap bina touch kiye Sahil bol kar kuch bhi puch sakte hain.', false, true);
+  } else {
+    if (activeRec) { try { activeRec.abort(); } catch (e) {} }
+    document.getElementById("statusText").innerText = "Wake word off. Tap S or Talk to SAHIL to speak.";
+  }
+};
+
+document.getElementById("menuBtn").onclick = function() {
+  var d = document.getElementById("drawer");
+  d.style.display = (d.style.display === "block") ? "none" : "block";
+  showHist();
+};
+
+document.getElementById("clearBtn").onclick = function() {
+  histData = [];
+  try { localStorage.removeItem("sahil_simple_hist"); } catch (e) {}
+  showHist();
+};
+
+document.getElementById("sendBtn").onclick = function() {
+  var inp = document.getElementById("cmdBox");
+  if (inp.value.trim()) {
+    replyCmd(inp.value.trim());
+    inp.value = "";
+  }
+};
+
+document.getElementById("saveKeyBtn").onclick = function() {
+  gemKey = document.getElementById("gemKeyBox").value.trim();
+  try {
+    if (gemKey) {
+      localStorage.setItem("sahil_gemini_key", gemKey);
+      document.getElementById("keyMsg").innerText = "Gemini API key saved! Detailed answers active.";
+      bolna("Gemini API key saved. Now I will give detailed answers.", false, false);
+    } else {
+      localStorage.removeItem("sahil_gemini_key");
+      document.getElementById("keyMsg").innerText = "Key removed. Using Wikipedia detailed summary.";
+    }
+  } catch (e) {}
+};
+
+document.getElementById("sCircle").onclick = startSingleMic;
+document.getElementById("talkBtn").onclick = startSingleMic;
+
+document.body.addEventListener("click", function() {
+  if (!spokenWelcome) {
+    wakeMode = true;
+    updateWakeUI();
+    bolna(WELCOME, false, false);
+  }
+}, { once: true });
+
+window.onload = function() {
+  showHist();
+  bolna(WELCOME, false, false);
+};
+</script>
+</body>
+</html>
